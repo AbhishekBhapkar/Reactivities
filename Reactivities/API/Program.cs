@@ -1,19 +1,17 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Application.Activities;
+using API.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(Opt =>
-{
+builder.Services.AddApplicationServices(builder.Configuration);
 
-    Opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
 
 
 var app = builder.Build();
@@ -25,6 +23,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("CorsPolicy");
 app.UseAuthorization();
 
 app.MapControllers();
